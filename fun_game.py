@@ -16,8 +16,8 @@ print(start)
 enemy_list = []
 enemy_count = 0
 enemy_max = 10 # keep max enemys to 5, for now
-enemy_width = 5
-enemy_length = 5
+enemy_width = 3
+enemy_length = 3
 enemy_outline = enemy_width // 2
 
 def move_enemy(enemy: Turtle):
@@ -42,7 +42,7 @@ def check_collision_onSpawn(enemy: Turtle):
     y_player = turt.ycor()
     x_enemy = enemy.xcor()
     y_enemy = enemy.ycor()
-    if abs(x_enemy - x_player) < 10 * enemy_width and abs(y_enemy - y_player) < 10 * enemy_length: # larger tolerance on spawn
+    if abs(x_enemy - x_player) < 32 * enemy_width and abs(y_enemy - y_player) < 32 * enemy_length: # larger tolerance on spawn so enemy doesn't obliterate player
             return True # returns true if collision occurred
     return False
 
@@ -52,7 +52,7 @@ def check_collision(enemy_list: list):
     for enemy in enemy_list:
         x_enemy = enemy.xcor()
         y_enemy = enemy.ycor()
-        if abs(x_enemy - x_player) < 8 * enemy_width and abs(y_enemy - y_player) < 8 * enemy_length: # tolerance for collision
+        if abs(x_enemy - x_player) < 8 * enemy_width and abs(y_enemy - y_player) < 8 * enemy_length: # tolerance for collision, 8 seems to work NO IDEA WHY
             enemy.color("yellow") # for now, I just set color of enemy to yellow to "tag" a collision
     wn.ontimer(lambda: check_collision(enemy_list), 16)
 
