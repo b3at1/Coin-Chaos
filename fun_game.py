@@ -1,13 +1,41 @@
 # Title??
 from turtle import *
+import time
+import random
 
+wn = Screen()
+width = wn.window_width()/2
+height = wn.window_height()/2
+######################## BOT MOVEMENT ########################
+
+# TODO: make spawn_enemy method
+start = time.time()
+end = start
+print(start)
+
+def move_enemy(enemy):
+        enemy.pendown()
+        enemy.showturtle()
+        enemy.goto(random.randint(-1 * width + 20, width - 20), random.randint(-1 * height + 20, height - 20))
+        # CALL COLLISION LISTENER HERE
+        wn.ontimer(lambda: move_enemy(enemy) , 100)
+def spawn_enemy():
+        enemy = Turtle(visible=False)
+        enemy.speed('fastest')
+        enemy.penup()
+        enemy.goto(random.randint(-1 * width + 20, width - 20), random.randint(-1 * height + 20, height - 20))
+        move_enemy(enemy)
+        # CALL COLLISION LISTENER HERE
+        wn.ontimer(spawn_enemy, 1000)
+        #print(1000 - int(time.time() - start))
+        #wn.ontimer(spawn_enemy, 1000 - 2 * int(time.time() - start)) # use current time to speed up the spawning of enemy?
 
 ######################## PLAYER MOVEMENT ########################
 
 turt = Turtle()
 turt.speed('fastest')
 turt.penup()
-
+turt.shape("turtle")
 def up():
     turt.seth(90) # set turtle direction to north
     turt.forward(20)
@@ -24,8 +52,6 @@ def left():
 def checkbounds():
     # by default, screen is 960x960.
     # coords go from (-480,-480) to (480, 480)
-    width = wn.window_width()/2
-    height = wn.window_height()/2
     if turt.xcor() >= width - 20:
         turt.setx(width - 20)
     if turt.ycor() >= height - 20:
@@ -36,17 +62,16 @@ def checkbounds():
     if turt.ycor() <= -1 * height + 20:
         turt.sety(-1 * height + 20)
     wn.ontimer(checkbounds, 20)
-getscreen()
-wn = Screen()
+
+wn.bgcolor('red')
 wn.listen()
+
 checkbounds()
+spawn_enemy()
+
 wn.onkeypress(up, key="w")
 wn.onkeypress(left, key="a")
 wn.onkeypress(down, key="s")
 wn.onkeypress(right, key="d")
-
-
-
-
 
 wn.exitonclick()
