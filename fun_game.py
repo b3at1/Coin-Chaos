@@ -9,10 +9,10 @@ height = wn.window_height()/2
 
 ######################## ENEMY LOGIC ########################
 
-# TODO: check for collisions, difficulty increase, 'kill' enemies, fix enemy bounce angle?
+# TODO: difficulty increase, 'kill' enemies, fix enemy bounce angle?
 start = time.time()
 end = start
-print(start)
+#print(start)
 enemy_list = []
 enemy_count = 0
 enemy_max = 10 # keep max enemys to 5, for now
@@ -75,6 +75,32 @@ def spawn_enemy(enemy_count, enemy_max):
         #print(1000 - int(time.time() - start))
         #wn.ontimer(spawn_enemy, 1000 - 2 * int(time.time() - start)) # use current time to speed up the spawning of enemy?
 
+######################## COIN LOGIC ########################
+
+coin_list = []
+coin_count = 0
+coin_max = 10
+coin_width = 2
+coin_length = 2
+coin_outline = coin_width // 2
+
+def spawn_coin(coin_count, coin_max):
+    if coin_count < coin_max:
+        coin_count += 1
+        coin = Turtle(visible=False)
+        coin.resizemode("user")
+        coin.shapesize(coin_width, coin_length, coin_outline) # change this later lol
+        coin.shape("triangle") # change this later lol
+        coin.color(255,200,150) # change this later lol
+        coin_list.append(coin) # add coin to coin list
+        coin.penup()
+        coin.goto(random.randint(-1 * width + 100, width - 100), random.randint(-1 * height + 100, height - 100))
+        while check_collision_onSpawn(coin): # make sure the enemy cannot spawn inside of the player
+            coin.goto(random.randint(-1 * width + 100, width - 100), random.randint(-1 * height + 100, height - 100))
+        coin.showturtle()
+    wn.ontimer(lambda: spawn_coin(coin_count, coin_max), 1000)
+
+
 ######################## PLAYER LOGIC ########################
 
 turt = Turtle()
@@ -114,10 +140,17 @@ wn.bgcolor('red')
 wn.colormode(255)
 wn.listen()
 
-checkbounds_player()
-spawn_enemy(enemy_count, enemy_max)
-check_collision(enemy_list)
+checkbounds_player() # initiate collision check
 
+# initiate turtle objects
+spawn_enemy(enemy_count, enemy_max)
+spawn_coin(coin_count, coin_max)
+
+# check collisions
+check_collision(enemy_list)
+check_collision(coin_list)
+
+# controls
 wn.onkeypress(up, key="w")
 wn.onkeypress(left, key="a")
 wn.onkeypress(down, key="s")
