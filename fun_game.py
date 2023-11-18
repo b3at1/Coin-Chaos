@@ -6,14 +6,15 @@ import random
 
 FONT = ("Arial", 18, "normal")
 wn = Screen()
-wn.bgcolor('red')
+wn.bgcolor('green')
 wn.colormode(255)
 wn.listen()
 wn.register_shape('coin32.gif')
+wn.register_shape('ball.gif')
 # 960x810
 width = wn.window_width()/2
 height = wn.window_height()/2
-    
+player_defeat = False
 ######################## TIME LOGIC ########################
 def calc_time(start: float):
     global time_elapsed
@@ -30,7 +31,9 @@ enemy_length = 3
 enemy_outline = enemy_width // 2
 
 def move_enemy(enemy: Turtle):
-    global time_elapsed
+    global time_elapsed, player_defeat
+    if player_defeat:
+        return
     tracer(False)  # we update everything together for performance reasons
     enemy.speed(4)
     enemy.forward(1 + (int(time_elapsed)*0.2)) # move forward 1 + (1 unit for every 5 seconds)
@@ -56,23 +59,29 @@ def check_collision_onSpawn(enemy: Turtle):
     return False
 
 def check_collision_enemy(enemy_list: list):
+    global player_defeat
     x_player = turt.xcor()
     y_player = turt.ycor()
     for enemy in enemy_list:
         x_enemy = enemy.xcor()
         y_enemy = enemy.ycor()
         if abs(x_enemy - x_player) < 8 * enemy_width and abs(y_enemy - y_player) < 8 * enemy_length: # tolerance for collision, 8 seems to work NO IDEA WHY
-            enemy.color("yellow") # for now, I just set color of enemy to yellow to "tag" a collision
             # GAME OVER STATE HERE
+            player_defeat = True # player has been defeated
+            return
+            
     wn.ontimer(lambda: check_collision_enemy(enemy_list), 16)
 
 def spawn_enemy(enemy_count, enemy_max):
+    global player_defeat
+    if player_defeat:
+        return
     if enemy_count < enemy_max:
         enemy_count += 1
         enemy = Turtle(visible=False)
         enemy.resizemode("user")
         enemy.shapesize(enemy_width, enemy_length, enemy_outline)
-        enemy.shape("circle")
+        enemy.shape("ball.gif")
         enemy_list.append(enemy) # add enemy to enemy list
         enemy.speed('fastest')
         enemy.penup()
@@ -81,7 +90,7 @@ def spawn_enemy(enemy_count, enemy_max):
         while check_collision_onSpawn(enemy): # make sure the enemy cannot spawn inside of the player
             enemy.goto(random.randint(-1 * width + 20, width - 20), random.randint(-1 * height + 20, height - 20))
         move_enemy(enemy)
-    wn.ontimer(lambda: spawn_enemy(enemy_count, enemy_max), 3000)
+    wn.ontimer(lambda: spawn_enemy(enemy_count, enemy_max), 5000)
     # use current time to speed up the spawning of enemy?
 
 ######################## COIN LOGIC ########################
@@ -139,7 +148,9 @@ start = time.time()
 time_elapsed = 0.0
 
 def calc_score(score_shown: Turtle):
-    global time_elapsed, score
+    global time_elapsed, score, player_defeat
+    if player_defeat:
+        return
     # 10 points per second, 100 per coin
     score = int(time_elapsed // 0.1) + (coin_collected * 100)
     draw_score(score_shown)
