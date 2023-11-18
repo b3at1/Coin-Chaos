@@ -16,6 +16,68 @@ wn.register_shape('player.gif')
 width = wn.window_width()/2
 height = wn.window_height()/2
 player_defeat = False
+
+enemy_list = []
+enemy_count = 0
+enemy_max = 10 # keep max enemys to 5, for now
+enemy_width = 3
+enemy_length = 3
+enemy_outline = enemy_width // 2
+
+coin_collected = 0 # number of coins that player has collected
+coin_list = []
+coin_count = 0
+coin_max = 5
+# DO NOT CHANGE COIN DIMENSIONS, it goes wonky
+coin_width = 1.4
+coin_length = 1.4
+coin_outline = coin_width // 1
+
+score = 0
+score_shown = Turtle()
+score_shown.penup()
+score_shown.hideturtle()
+score_shown.goto(width - 200, height - 50)
+score_shown.pencolor('white')
+start = time.time()
+time_elapsed = 0.0
+
+turt = Turtle()
+turt.speed('fastest')
+turt.penup()
+turt.resizemode("user")
+turt.shapesize(coin_width, coin_length, coin_outline)
+turt.shape("player.gif") 
+
+######################## GAME STATE LOGIC ########################
+def game_over():
+    global player_defeat, score
+    if player_defeat:
+        wn.reset()
+        final_score = Turtle(visible='False')
+        final_score.penup()
+        final_score.pencolor('white')
+        final_score.goto(-60, 50)
+        final_score.write(f"GAME OVER!", font=FONT)
+        final_score.goto(-60, 0)
+        final_score.write(f"Score: {score:>10}", font=FONT)
+        play_btn = create_button(130, 90, "Play Again")
+        play_btn.onclick(register_click)
+
+def create_button(x: int, y: int, text: str) -> Screen:
+    # this method is used to create and return button turtles that can be pressed
+    button = Screen()
+    penup()
+    goto(x, y)
+    color('white')
+    write(f"{text}", font=FONT)
+    return button
+
+def register_click(x: int, y: int):
+    # returns click coordinates
+    print(x,  y)
+    return (x, y)
+
 ######################## TIME LOGIC ########################
 def calc_time(start: float):
     global time_elapsed
@@ -24,12 +86,7 @@ def calc_time(start: float):
 
 ######################## ENEMY LOGIC ########################
 # TODO: difficulty increase, 'kill' enemies, fix enemy bounce angle?
-enemy_list = []
-enemy_count = 0
-enemy_max = 10 # keep max enemys to 5, for now
-enemy_width = 3
-enemy_length = 3
-enemy_outline = enemy_width // 2
+
 
 def move_enemy(enemy: Turtle):
     global time_elapsed, player_defeat
@@ -69,6 +126,7 @@ def check_collision_enemy(enemy_list: list):
         if abs(x_enemy - x_player) < 8 * enemy_width and abs(y_enemy - y_player) < 8 * enemy_length: # tolerance for collision, 8 seems to work NO IDEA WHY
             # GAME OVER STATE HERE
             player_defeat = True # player has been defeated
+            game_over()
             return
             
     wn.ontimer(lambda: check_collision_enemy(enemy_list), 16)
@@ -95,24 +153,15 @@ def spawn_enemy(enemy_count, enemy_max):
     # use current time to speed up the spawning of enemy?
 
 ######################## COIN LOGIC ########################
-coin_collected = 0 # number of coins that player has collected
-coin_list = []
-coin_count = 0
-coin_max = 5
-# DO NOT CHANGE COIN DIMENSIONS, it goes wonky
-coin_width = 1.4
-coin_length = 1.4
-coin_outline = coin_width // 1
-
 def spawn_coin(coin_max):
     global coin_count
     if coin_count < coin_max:
         coin_count += 1
         coin = Turtle(visible=False)
         coin.resizemode("user")
-        coin.shapesize(coin_width, coin_length, coin_outline) # change this later lol
-        coin.shape("coin32.gif") # change this later lol
-        coin.color(255,200,150) # change this later lol
+        coin.shapesize(coin_width, coin_length, coin_outline) 
+        coin.shape("coin32.gif")
+        coin.color(255,200,150)
         coin_list.append(coin) # add coin to coin list
         coin.penup()
         coin.goto(random.randint(-1 * width + 100, width - 100), random.randint(-1 * height + 100, height - 100))
@@ -139,14 +188,6 @@ def check_collision_coin(coin_list: list):
     wn.ontimer(lambda: check_collision_coin(coin_list), 16)
 
 ######################## SCORING LOGIC ########################
-score = 0
-score_shown = Turtle()
-score_shown.penup()
-score_shown.hideturtle()
-score_shown.goto(width - 200, height - 50)
-score_shown.pencolor('white')
-start = time.time()
-time_elapsed = 0.0
 
 def calc_score(score_shown: Turtle):
     global time_elapsed, score, player_defeat
@@ -164,12 +205,6 @@ def draw_score(score_shown: Turtle):
 
 ######################## PLAYER LOGIC ########################
 
-turt = Turtle()
-turt.speed('fastest')
-turt.penup()
-turt.resizemode("user")
-turt.shapesize(coin_width, coin_length, coin_outline)
-turt.shape("player.gif") # change this later lol
 def up():
     turt.seth(90) # set turtle direction to north
     turt.forward(20)
@@ -199,25 +234,30 @@ def checkbounds_player():
     wn.ontimer(checkbounds_player, 20)
 
 
+def start_game():
+    # initiate scoring
+    calc_time(start)
+    calc_score(score_shown)
 
-# initiate scoring
-calc_time(start)
-calc_score(score_shown)
-# initiate collision check
-checkbounds_player() 
+    # check for game_over():
+    game_over()
 
-# initiate turtle objects
-spawn_enemy(enemy_count, enemy_max)
-spawn_coin(coin_max)
+    # initiate collision check
+    checkbounds_player() 
 
-# check collisions
-check_collision_enemy(enemy_list)
-check_collision_coin(coin_list)
+    # initiate turtle objects
+    spawn_enemy(enemy_count, enemy_max)
+    spawn_coin(coin_max)
 
-# controls
-wn.onkeypress(up, key="w")
-wn.onkeypress(left, key="a")
-wn.onkeypress(down, key="s")
-wn.onkeypress(right, key="d")
+    # check collisions
+    check_collision_enemy(enemy_list)
+    check_collision_coin(coin_list)
 
+    # controls
+    wn.onkeypress(up, key="w")
+    wn.onkeypress(left, key="a")
+    wn.onkeypress(down, key="s")
+    wn.onkeypress(right, key="d")
+
+start_game()
 wn.exitonclick()
