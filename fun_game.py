@@ -11,32 +11,6 @@ width = wn.window_width()/2
 height = wn.window_height()/2
 wn.register_shape('coin32.gif')
 
-######################## SCORING LOGIC ########################
-score = 0
-score_shown = Turtle()
-score_shown.penup()
-score_shown.hideturtle()
-start = time.time()
-time_elapsed = 0.0
-
-def calc_time(start: float):
-    global time_elapsed
-    time_elapsed = time.time() - start 
-    print(time_elapsed)
-    wn.ontimer(lambda: calc_time(start), 500)
-
-def calc_score(score_shown: Turtle):
-    global time_elapsed, score
-    score = time_elapsed * 2
-    draw_score(score_shown)
-    wn.ontimer(lambda: calc_score(score_shown), 100)
-
-def draw_score(score_shown: Turtle):
-    global score
-    score_shown.clear()
-    score_shown.write("Score: " + str(score), font=FONT)
-
-
 ######################## ENEMY LOGIC ########################
 
 # TODO: difficulty increase, 'kill' enemies, fix enemy bounce angle?
@@ -145,6 +119,34 @@ def check_collision_coin(coin_list: list):
             del coin # dunno what this does exactly, but hopefully it works
             #
     wn.ontimer(lambda: check_collision_coin(coin_list), 16)
+
+######################## SCORING LOGIC ########################
+score = 0
+score_shown = Turtle()
+score_shown.penup()
+score_shown.hideturtle()
+score_shown.goto(width - 200, height - 50)
+score_shown.pencolor('white')
+start = time.time()
+time_elapsed = 0.0
+
+def calc_time(start: float):
+    global time_elapsed
+    time_elapsed = time.time() - start 
+    print(time_elapsed)
+    wn.ontimer(lambda: calc_time(start), 100)
+
+def calc_score(score_shown: Turtle):
+    global time_elapsed, score
+    # 10 points per second, 100 per coin
+    score = int(time_elapsed // 0.1) + coin_collected * 20
+    draw_score(score_shown)
+    wn.ontimer(lambda: calc_score(score_shown), 100)
+
+def draw_score(score_shown: Turtle):
+    global score
+    score_shown.clear()
+    score_shown.write(f"Score: {score:>10}", font=FONT) # left pad it to look nicer
 
 ######################## PLAYER LOGIC ########################
 
