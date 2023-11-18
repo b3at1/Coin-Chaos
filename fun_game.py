@@ -3,18 +3,43 @@ from turtle import *
 import time
 import random
 # TODO: ART BACKGROUND, LOCK WINDOW SIZE, ENEMY SKIN
+
+FONT = ("Arial", 18, "normal")
 wn = Screen()
 # 960x810
 width = wn.window_width()/2
 height = wn.window_height()/2
 wn.register_shape('coin32.gif')
+
+######################## SCORING LOGIC ########################
+score = 0
+score_shown = Turtle()
+score_shown.penup()
+score_shown.hideturtle()
+start = time.time()
+time_elapsed = 0.0
+
+def calc_time(start: float):
+    global time_elapsed
+    time_elapsed = time.time() - start 
+    print(time_elapsed)
+    wn.ontimer(lambda: calc_time(start), 500)
+
+def calc_score(score_shown: Turtle):
+    global time_elapsed, score
+    score = time_elapsed * 2
+    draw_score(score_shown)
+    wn.ontimer(lambda: calc_score(score_shown), 100)
+
+def draw_score(score_shown: Turtle):
+    global score
+    score_shown.clear()
+    score_shown.write("Score: " + str(score), font=FONT)
+
+
 ######################## ENEMY LOGIC ########################
 
 # TODO: difficulty increase, 'kill' enemies, fix enemy bounce angle?
-start = time.time()
-end = start
-start = start - end
-#print(start)
 enemy_list = []
 enemy_count = 0
 enemy_max = 10 # keep max enemys to 5, for now
@@ -160,7 +185,11 @@ wn.bgcolor('red')
 wn.colormode(255)
 wn.listen()
 
-checkbounds_player() # initiate collision check
+# initiate scoring
+calc_time(start)
+calc_score(score_shown)
+# initiate collision check
+checkbounds_player() 
 
 # initiate turtle objects
 spawn_enemy(enemy_count, enemy_max)
