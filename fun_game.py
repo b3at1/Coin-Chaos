@@ -6,13 +6,21 @@ import random
 
 FONT = ("Arial", 18, "normal")
 wn = Screen()
+wn.bgcolor('red')
+wn.colormode(255)
+wn.listen()
+wn.register_shape('coin32.gif')
 # 960x810
 width = wn.window_width()/2
 height = wn.window_height()/2
-wn.register_shape('coin32.gif')
+    
+######################## TIME LOGIC ########################
+def calc_time(start: float):
+    global time_elapsed
+    time_elapsed = time.time() - start 
+    wn.ontimer(lambda: calc_time(start), 100)
 
 ######################## ENEMY LOGIC ########################
-
 # TODO: difficulty increase, 'kill' enemies, fix enemy bounce angle?
 enemy_list = []
 enemy_count = 0
@@ -22,9 +30,10 @@ enemy_length = 3
 enemy_outline = enemy_width // 2
 
 def move_enemy(enemy: Turtle):
+    global time_elapsed
     tracer(False)  # we update everything together for performance reasons
     enemy.speed(4)
-    enemy.forward(8)
+    enemy.forward(1 + (int(time_elapsed)*0.2)) # move forward 1 + (1 unit for every 5 seconds)
     enemy.showturtle()
     checkbounds_enemy(enemy)
     update()
@@ -72,9 +81,8 @@ def spawn_enemy(enemy_count, enemy_max):
         while check_collision_onSpawn(enemy): # make sure the enemy cannot spawn inside of the player
             enemy.goto(random.randint(-1 * width + 20, width - 20), random.randint(-1 * height + 20, height - 20))
         move_enemy(enemy)
-    wn.ontimer(lambda: spawn_enemy(enemy_count, enemy_max), 1000)
-        #print(1000 - int(time.time() - start))
-        #wn.ontimer(spawn_enemy, 1000 - 2 * int(time.time() - start)) # use current time to speed up the spawning of enemy?
+    wn.ontimer(lambda: spawn_enemy(enemy_count, enemy_max), 3000)
+    # use current time to speed up the spawning of enemy?
 
 ######################## COIN LOGIC ########################
 coin_collected = 0 # number of coins that player has collected
@@ -130,16 +138,11 @@ score_shown.pencolor('white')
 start = time.time()
 time_elapsed = 0.0
 
-def calc_time(start: float):
-    global time_elapsed
-    time_elapsed = time.time() - start 
-    print(time_elapsed)
-    wn.ontimer(lambda: calc_time(start), 100)
-
 def calc_score(score_shown: Turtle):
     global time_elapsed, score
     # 10 points per second, 100 per coin
-    score = int(time_elapsed // 0.1) + coin_collected * 20
+    score = int(time_elapsed // 0.1) + (coin_collected * 100)
+    print(score)
     draw_score(score_shown)
     wn.ontimer(lambda: calc_score(score_shown), 100)
 
@@ -183,9 +186,6 @@ def checkbounds_player():
     wn.ontimer(checkbounds_player, 20)
 
 
-wn.bgcolor('red')
-wn.colormode(255)
-wn.listen()
 
 # initiate scoring
 calc_time(start)
