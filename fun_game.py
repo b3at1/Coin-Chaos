@@ -2,7 +2,6 @@
 from turtle import *
 import time
 import random
-# TODO:  LOCK WINDOW SIZE
 
 FONT = ("Arial", 18, "normal")
 wn = Screen()
@@ -11,6 +10,7 @@ wn.colormode(255)
 wn.listen()
 wn.register_shape('coin32.gif')
 wn.register_shape('ball.gif')
+wn.register_shape('player.gif')
 # 960x810
 width = wn.window_width()/2
 height = wn.window_height()/2
@@ -166,7 +166,9 @@ def draw_score(score_shown: Turtle):
 turt = Turtle()
 turt.speed('fastest')
 turt.penup()
-turt.shape("turtle")
+turt.resizemode("user")
+turt.shapesize(coin_width, coin_length, coin_outline)
+turt.shape("player.gif") # change this later lol
 def up():
     turt.seth(90) # set turtle direction to north
     turt.forward(20)
