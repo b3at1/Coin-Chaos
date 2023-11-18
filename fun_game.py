@@ -2,11 +2,11 @@
 from turtle import *
 import time
 import random
-
+# TODO: ART BACKGROUND, LOCK WINDOW SIZE, ENEMY SKIN
 wn = Screen()
 width = wn.window_width()/2
 height = wn.window_height()/2
-
+wn.register_shape('coin32.gif')
 ######################## ENEMY LOGIC ########################
 
 # TODO: difficulty increase, 'kill' enemies, fix enemy bounce angle?
@@ -27,7 +27,6 @@ def move_enemy(enemy: Turtle):
         enemy.showturtle()
         checkbounds_enemy(enemy)
         update()
-        # CALL COLLISION LISTENER HERE
         wn.ontimer(lambda: move_enemy(enemy), 16) # kinda breaks code on exit but its fine.
 
 def checkbounds_enemy(enemy: Turtle):
@@ -46,7 +45,7 @@ def check_collision_onSpawn(enemy: Turtle):
             return True # returns true if collision occurred
     return False
 
-def check_collision(enemy_list: list):
+def check_collision_enemy(enemy_list: list):
     x_player = turt.xcor()
     y_player = turt.ycor()
     for enemy in enemy_list:
@@ -54,7 +53,7 @@ def check_collision(enemy_list: list):
         y_enemy = enemy.ycor()
         if abs(x_enemy - x_player) < 8 * enemy_width and abs(y_enemy - y_player) < 8 * enemy_length: # tolerance for collision, 8 seems to work NO IDEA WHY
             enemy.color("yellow") # for now, I just set color of enemy to yellow to "tag" a collision
-    wn.ontimer(lambda: check_collision(enemy_list), 16)
+    wn.ontimer(lambda: check_collision_enemy(enemy_list), 16)
 
 def spawn_enemy(enemy_count, enemy_max):
         if enemy_count < enemy_max:
@@ -76,21 +75,24 @@ def spawn_enemy(enemy_count, enemy_max):
         #wn.ontimer(spawn_enemy, 1000 - 2 * int(time.time() - start)) # use current time to speed up the spawning of enemy?
 
 ######################## COIN LOGIC ########################
-
+coin_collected = 0 # number of coins that player has collected
+print(coin_collected, "first")
 coin_list = []
 coin_count = 0
 coin_max = 10
-coin_width = 2
-coin_length = 2
-coin_outline = coin_width // 2
+# DO NOT CHANGE COIN DIMENSIONS, it goes wonky
+coin_width = 1.4
+coin_length = 1.4
+coin_outline = coin_width // 1
 
-def spawn_coin(coin_count, coin_max):
+def spawn_coin(coin_max):
+    global coin_count
     if coin_count < coin_max:
         coin_count += 1
         coin = Turtle(visible=False)
         coin.resizemode("user")
         coin.shapesize(coin_width, coin_length, coin_outline) # change this later lol
-        coin.shape("triangle") # change this later lol
+        coin.shape("coin32.gif") # change this later lol
         coin.color(255,200,150) # change this later lol
         coin_list.append(coin) # add coin to coin list
         coin.penup()
@@ -98,8 +100,24 @@ def spawn_coin(coin_count, coin_max):
         while check_collision_onSpawn(coin): # make sure the enemy cannot spawn inside of the player
             coin.goto(random.randint(-1 * width + 100, width - 100), random.randint(-1 * height + 100, height - 100))
         coin.showturtle()
-    wn.ontimer(lambda: spawn_coin(coin_count, coin_max), 1000)
+    wn.ontimer(lambda: spawn_coin(coin_max), 1000)
 
+def check_collision_coin(coin_list: list):
+    global coin_collected, coin_count
+    x_player = turt.xcor()
+    y_player = turt.ycor()
+    for coin in coin_list:
+        x_coin = coin.xcor()
+        y_coin = coin.ycor()
+        if abs(x_coin - x_player) < 16 * coin_width and abs(y_coin - y_player) < 16 * coin_length: # 16 tolerance coeff, idk why
+            coin_list.remove(coin)
+            # use global to modify the variable
+            coin_collected = coin_collected + 1
+            coin_count -= 1
+            coin.hideturtle()
+            del coin # dunno what this does exactly, but hopefully it works
+            #
+    wn.ontimer(lambda: check_collision_coin(coin_list), 16)
 
 ######################## PLAYER LOGIC ########################
 
@@ -144,11 +162,11 @@ checkbounds_player() # initiate collision check
 
 # initiate turtle objects
 spawn_enemy(enemy_count, enemy_max)
-spawn_coin(coin_count, coin_max)
+spawn_coin(coin_max)
 
 # check collisions
-check_collision(enemy_list)
-check_collision(coin_list)
+check_collision_enemy(enemy_list)
+check_collision_coin(coin_list)
 
 # controls
 wn.onkeypress(up, key="w")
