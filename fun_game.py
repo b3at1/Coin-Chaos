@@ -6,6 +6,7 @@ import random
 FONT = ("Arial", 18, "normal")
 wn = Screen()
 wn.bgpic('dungeon.gif')
+wn.bgcolor('black')
 wn.colormode(255)
 wn.listen()
 wn.register_shape('coin32.gif')
