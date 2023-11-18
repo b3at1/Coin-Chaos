@@ -3,55 +3,11 @@ from turtle import *
 import time
 import random
 
-FONT = ("Arial", 18, "normal")
-wn = Screen()
-wn.bgpic('dungeon.gif')
-wn.bgcolor('black')
-wn.colormode(255)
-wn.listen()
-wn.register_shape('coin32.gif')
-wn.register_shape('ball.gif')
-wn.register_shape('player.gif')
-# 960x810
-width = wn.window_width()/2
-height = wn.window_height()/2
-player_defeat = False
-
-enemy_list = []
-enemy_count = 0
-enemy_max = 10 # keep max enemys to 5, for now
-enemy_width = 3
-enemy_length = 3
-enemy_outline = enemy_width // 2
-
-coin_collected = 0 # number of coins that player has collected
-coin_list = []
-coin_count = 0
-coin_max = 5
-# DO NOT CHANGE COIN DIMENSIONS, it goes wonky
-coin_width = 1.4
-coin_length = 1.4
-coin_outline = coin_width // 1
-
-score = 0
-score_shown = Turtle()
-score_shown.penup()
-score_shown.hideturtle()
-score_shown.goto(width - 200, height - 50)
-score_shown.pencolor('white')
-start = time.time()
-time_elapsed = 0.0
-
-turt = Turtle()
-turt.speed('fastest')
-turt.penup()
-turt.resizemode("user")
-turt.shapesize(coin_width, coin_length, coin_outline)
-turt.shape("player.gif") 
 
 ######################## GAME STATE LOGIC ########################
 def game_over():
     global player_defeat, score, wn
+    # the wait_times() are necessary otherwise a race condition will occur
     if player_defeat:
         wn.clear()
         wn = Screen()
@@ -68,7 +24,11 @@ def game_over():
         final_score.goto(-100, 50)
         final_score.write(f"GAME OVER!", font=FONT)
         final_score.goto(-100, 0)
+        five_seconds = time.time()
+        # had to make my own function, since time.sleep() interrupts gameloop
+        wait_time(2)
         final_score.write(f"Score: {score:>10}", font=FONT)
+        wait_time(1)
         play_btn = create_button(-80, -50, 130, 30, "Play Again")
         play_btn.onclick(register_click)
         update()
@@ -98,21 +58,30 @@ def create_button(x: int, y: int, txt_width: int, txt_height: int, text: str) ->
 
 def register_click(x: int, y: int):
     # returns click coordinates
-
     # check if the button was pressed
     if x >= -90 and x <= 40 and y >= -50 and y <= -20:
-        print("Play again has been clicked")
+        start_game()
     print(x, y)
     return (x, y)
 
 ######################## TIME LOGIC ########################
 def calc_time(start: float):
     global time_elapsed
+    if player_defeat:
+        return
+    global time_elapsed
     time_elapsed = time.time() - start 
     wn.ontimer(lambda: calc_time(start), 100)
 
+def wait_time(amnt: int):
+    # waits amnt seconds
+    startT = time.time()
+    i = amnt
+    while i - startT < amnt:
+        i = time.time()
+
 ######################## ENEMY LOGIC ########################
-# TODO: difficulty increase, 'kill' enemies, fix enemy bounce angle?
+# TODO: fix enemy bounce angle?
 
 
 def move_enemy(enemy: Turtle):
@@ -128,6 +97,9 @@ def move_enemy(enemy: Turtle):
     wn.ontimer(lambda: move_enemy(enemy), 16) # kinda breaks code on exit but its fine.
 
 def checkbounds_enemy(enemy: Turtle):
+    global time_elapsed
+    if player_defeat:
+        return
     if enemy.xcor() >= width - 20 or enemy.ycor() >= height - 20 or enemy.xcor() <= -1 * width + 20 or enemy.ycor() <= -1 * height + 20:
         angle_modifier = random.randint(0,15)
         enemy.setheading((120 + angle_modifier + enemy.heading()) % 360) # bounce off a wall
@@ -135,6 +107,9 @@ def checkbounds_enemy(enemy: Turtle):
 
 # check collision can take either a list or a single turtle, and returns whether a collision occurred
 def check_collision_onSpawn(enemy: Turtle):
+    global time_elapsed
+    if player_defeat:
+        return
     x_player = turt.xcor()
     y_player = turt.ycor()
     x_enemy = enemy.xcor()
@@ -150,9 +125,10 @@ def check_collision_enemy(enemy_list: list):
     for enemy in enemy_list:
         x_enemy = enemy.xcor()
         y_enemy = enemy.ycor()
-        if abs(x_enemy - x_player) < 8 * enemy_width and abs(y_enemy - y_player) < 8 * enemy_length: # tolerance for collision, 8 seems to work NO IDEA WHY
+        if abs(x_enemy - x_player) < 12 * enemy_width and abs(y_enemy - y_player) < 12 * enemy_length: # tolerance for collision, 4 seems to work NO IDEA WHY
             # GAME OVER STATE HERE
             player_defeat = True # player has been defeated
+            wait_time(1) # these waits reduce chance of race condition
             game_over()
             return
             
@@ -237,20 +213,35 @@ def draw_score(score_shown: Turtle):
 ######################## PLAYER LOGIC ########################
 
 def up():
+    global time_elapsed
+    if player_defeat:
+        return
     turt.seth(90) # set turtle direction to north
     turt.forward(20)
 
 def down():
+    global time_elapsed
+    if player_defeat:
+        return 
     turt.seth(270) # set turtle direction to south
     turt.forward(20)
 def right():
+    global time_elapsed
+    if player_defeat:
+        return
     turt.seth(0) # set turtle direction to east
     turt.forward(20)
 def left():
+    global time_elapsed
+    if player_defeat:
+        return
     turt.seth(180) # set turtle direction to west
     turt.forward(20)
 
 def checkbounds_player():
+    global time_elapsed
+    if player_defeat:
+        return
     # by default, screen is 960x960.
     # coords go from (-480,-480) to (480, 480)
     if turt.xcor() >= width - 20:
@@ -265,7 +256,56 @@ def checkbounds_player():
     wn.ontimer(checkbounds_player, 20)
 
 
-def start_game():
+def start_game(): 
+    # this is what happens when you dont make classes :(
+    global FONT, wn, width, height, player_defeat, enemy_list, enemy_count, enemy_max, enemy_width, enemy_length, enemy_outline, coin_collected, coin_list, coin_count, coin_width, coin_length, coin_outline, score, score_shown, start, time_elapsed, turt
+    FONT = ("Arial", 18, "normal")
+    wn = Screen()
+    wn.clear()
+    wn.bgpic('dungeon.gif')
+    wn.bgcolor('black')
+    wn.colormode(255)
+    wn.listen()
+    wn.register_shape('coin32.gif')
+    wn.register_shape('ball.gif')
+    wn.register_shape('player.gif')
+    # 960x810
+    width = wn.window_width()/2
+    height = wn.window_height()/2
+    player_defeat = False
+
+    enemy_list = []
+    enemy_count = 0
+    enemy_max = 10 # keep max enemys to 5, for now
+    enemy_width = 3
+    enemy_length = 3
+    enemy_outline = enemy_width // 2
+
+    coin_collected = 0 # number of coins that player has collected
+    coin_list = []
+    coin_count = 0
+    coin_max = 5
+    # DO NOT CHANGE COIN DIMENSIONS, it goes wonky
+    coin_width = 1.4
+    coin_length = 1.4
+    coin_outline = coin_width // 1
+
+    score = 0
+    score_shown = Turtle()
+    score_shown.penup()
+    score_shown.hideturtle()
+    score_shown.goto(width - 200, height - 50)
+    score_shown.pencolor('white')
+    start = time.time()
+    time_elapsed = 0.0
+
+    turt = Turtle()
+    turt.speed('fastest')
+    turt.penup()
+    turt.resizemode("user")
+    turt.shapesize(coin_width, coin_length, coin_outline)
+    turt.shape("player.gif") 
+
     # initiate scoring
     calc_time(start)
     calc_score(score_shown)
