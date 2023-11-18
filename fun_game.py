@@ -51,31 +51,58 @@ turt.shape("player.gif")
 
 ######################## GAME STATE LOGIC ########################
 def game_over():
-    global player_defeat, score
+    global player_defeat, score, wn
     if player_defeat:
-        wn.reset()
-        final_score = Turtle(visible='False')
+        wn.clear()
+        wn = Screen()
+        wn.bgpic('dungeon.gif')
+        wn.bgcolor('black')
+        wn.colormode(255)
+        wn.listen()
+        wn.register_shape('coin32.gif')
+        wn.register_shape('ball.gif')
+        wn.register_shape('player.gif')
+        final_score = Turtle(visible=False)
         final_score.penup()
         final_score.pencolor('white')
-        final_score.goto(-60, 50)
+        final_score.goto(-100, 50)
         final_score.write(f"GAME OVER!", font=FONT)
-        final_score.goto(-60, 0)
+        final_score.goto(-100, 0)
         final_score.write(f"Score: {score:>10}", font=FONT)
-        play_btn = create_button(130, 90, "Play Again")
+        play_btn = create_button(-80, -50, 130, 30, "Play Again")
         play_btn.onclick(register_click)
+        update()
 
-def create_button(x: int, y: int, text: str) -> Screen:
+def create_button(x: int, y: int, txt_width: int, txt_height: int, text: str) -> Screen:
     # this method is used to create and return button turtles that can be pressed
+    button_box = Turtle(visible=False)
+    button_box.penup()
+    button_box.goto(x, y)
+    button_box.color('white')
+    button_box.write(f"{text}", font=FONT)
+    button_box.goto(x - 10, y)
+    tracer(False)
+    
+    # button boxxing
+    button_box.pendown()
+    button_box.color('white')
+    button_box.pensize(2)
+    for i in range(2):
+        button_box.forward(txt_width)
+        button_box.left(90)
+        button_box.forward(txt_height)
+        button_box.left(90)
+    update()
     button = Screen()
-    penup()
-    goto(x, y)
-    color('white')
-    write(f"{text}", font=FONT)
     return button
 
 def register_click(x: int, y: int):
     # returns click coordinates
-    print(x,  y)
+
+    # check if the button was pressed
+    if x >= -90 and x <= 40 and y >= -50 and y <= -20:
+        print("Play again has been clicked")
+    print(x, y)
     return (x, y)
 
 ######################## TIME LOGIC ########################
@@ -154,7 +181,9 @@ def spawn_enemy(enemy_count, enemy_max):
 
 ######################## COIN LOGIC ########################
 def spawn_coin(coin_max):
-    global coin_count
+    global coin_count, player_defeat
+    if player_defeat:
+        return
     if coin_count < coin_max:
         coin_count += 1
         coin = Turtle(visible=False)
@@ -171,7 +200,9 @@ def spawn_coin(coin_max):
     wn.ontimer(lambda: spawn_coin(coin_max), 1000)
 
 def check_collision_coin(coin_list: list):
-    global coin_collected, coin_count
+    global coin_collected, coin_count, player_defeat
+    if player_defeat:
+        return
     x_player = turt.xcor()
     y_player = turt.ycor()
     for coin in coin_list:
