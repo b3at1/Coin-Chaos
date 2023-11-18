@@ -88,7 +88,7 @@ def spawn_enemy(enemy_count, enemy_max):
 coin_collected = 0 # number of coins that player has collected
 coin_list = []
 coin_count = 0
-coin_max = 10
+coin_max = 5
 # DO NOT CHANGE COIN DIMENSIONS, it goes wonky
 coin_width = 1.4
 coin_length = 1.4
@@ -142,7 +142,6 @@ def calc_score(score_shown: Turtle):
     global time_elapsed, score
     # 10 points per second, 100 per coin
     score = int(time_elapsed // 0.1) + (coin_collected * 100)
-    print(score)
     draw_score(score_shown)
     wn.ontimer(lambda: calc_score(score_shown), 100)
 
