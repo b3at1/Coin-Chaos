@@ -2,11 +2,11 @@
 from turtle import *
 import time
 import random
-# TODO: ART BACKGROUND, LOCK WINDOW SIZE, ENEMY SKIN
+# TODO:  LOCK WINDOW SIZE
 
 FONT = ("Arial", 18, "normal")
 wn = Screen()
-wn.bgcolor('green')
+wn.bgpic('dungeon.gif')
 wn.colormode(255)
 wn.listen()
 wn.register_shape('coin32.gif')
