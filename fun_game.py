@@ -3,7 +3,7 @@ from turtle import *
 import time
 import random
 
-
+    
 ######################## GAME STATE LOGIC ########################
 def game_over():
     global player_defeat, score, wn
@@ -66,10 +66,9 @@ def register_click(x: int, y: int):
 
 ######################## TIME LOGIC ########################
 def calc_time(start: float):
-    global time_elapsed
+    global time_elapsed, player_defeat
     if player_defeat:
         return
-    global time_elapsed
     time_elapsed = time.time() - start 
     wn.ontimer(lambda: calc_time(start), 100)
 
@@ -269,9 +268,11 @@ def start_game():
     wn.register_shape('coin32.gif')
     wn.register_shape('ball.gif')
     wn.register_shape('player.gif')
-    # 960x810
-    width = wn.window_width()/2
-    height = wn.window_height()/2
+
+    # 960x810 (default)
+    width = wn.screensize()[0]
+    height = wn.screensize()[1]
+
     player_defeat = False
 
     enemy_list = []
@@ -329,6 +330,5 @@ def start_game():
     wn.onkeypress(left, key="a")
     wn.onkeypress(down, key="s")
     wn.onkeypress(right, key="d")
-
 start_game()
 wn.exitonclick()
