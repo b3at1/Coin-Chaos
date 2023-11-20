@@ -6,7 +6,7 @@ import random
     
 ######################## GAME STATE LOGIC ########################
 def game_over():
-    global player_defeat, score, wn
+    global player_defeat, score, wn, gamestate
     # the wait_times() are necessary otherwise a race condition will occur
     if player_defeat:
         wn.clear()
@@ -24,12 +24,15 @@ def game_over():
         final_score.goto(-100, 50)
         final_score.write(f"GAME OVER!", font=FONT)
         final_score.goto(-100, 0)
+        gamestate = "DEFEAT"
         five_seconds = time.time()
         # had to make my own function, since time.sleep() interrupts gameloop
         wait_time(2)
         final_score.write(f"Score: {score:>10}", font=FONT)
         wait_time(1)
         play_btn = create_button(-80, -50, 130, 30, "Play Again")
+        play_btn = create_button(-80, -100, 130, 30, "Menu")
+        play_btn = create_button(-80, -150, 130, 30, "Quit")
         play_btn.onclick(register_click)
         update()
 
@@ -57,10 +60,16 @@ def create_button(x: int, y: int, txt_width: int, txt_height: int, text: str) ->
     return button
 
 def register_click(x: int, y: int):
+    global gamestate
     # returns click coordinates
     # check if the button was pressed
-    if x >= -90 and x <= 40 and y >= -50 and y <= -20:
-        start_game()
+    if gamestate == "DEFEAT":
+        if x >= -90 and x <= 40 and y >= -50 and y <= -20: # play game is clicked
+            start_game()
+        elif x >= -90 and x <= 40 and y >= -100 and y <= -70: # menu is clicked
+            print("MENU") # placeholders
+        elif x >= -90 and x <= 40 and y >= -150 and y <= -120: # quit is clicked
+            print("QUIT")
     print(x, y)
     return (x, y)
 
@@ -257,7 +266,7 @@ def checkbounds_player():
 
 def start_game(): 
     # this is what happens when you dont make classes :(
-    global FONT, wn, width, height, player_defeat, enemy_list, enemy_count, enemy_max, enemy_width, enemy_length, enemy_outline, coin_collected, coin_list, coin_count, coin_width, coin_length, coin_outline, score, score_shown, start, time_elapsed, turt
+    global FONT, wn, width, height, player_defeat, enemy_list, enemy_count, enemy_max, enemy_width, enemy_length, enemy_outline, coin_collected, coin_list, coin_count, coin_width, coin_length, coin_outline, score, score_shown, start, time_elapsed, turt, gamestate
     FONT = ("Arial", 18, "normal")
     wn = Screen()
     wn.clear()
@@ -273,7 +282,19 @@ def start_game():
     width = wn.screensize()[0]
     height = wn.screensize()[1]
 
+    # player is now undefeated
     player_defeat = False
+
+    '''
+    gamestate tracks what 'state' the game is in
+    ''MENU' == main menu
+    'PLAY' == playing game
+    'DEFEAT' == gameover screen
+    'ABOUT' == about screen
+    'QUIT' == quit game (exits)
+    '''
+    # game is now being played
+    gamestate = "PLAY"
 
     enemy_list = []
     enemy_count = 0
