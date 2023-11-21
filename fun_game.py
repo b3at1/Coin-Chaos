@@ -76,7 +76,7 @@ def register_click(x: int, y: int):
         if x >= -90 and x <= 40 and y >= -50 and y <= -20: # play game is clicked
             start_game()
         elif x >= -90 and x <= 40 and y >= -100 and y <= -70: # about is clicked
-           print("about") # placeholders
+           start_about() # placeholders
         elif x >= -90 and x <= 40 and y >= -150 and y <= -120: # quit is clicked
             wait_time(0.2)
             exit()
@@ -276,6 +276,7 @@ def checkbounds_player():
 
 def start_menu():
     global FONT, wn, width, height, gamestate
+    FONT = ("Arial", 18, "normal")
     wn = Screen()
     wn.clear()
     wn.bgpic('dungeon_title.gif')
@@ -291,6 +292,7 @@ def start_menu():
     btn = create_button(-80, -150, 130, 30, "Quit")
     btn.onclick(register_click)
     update()
+    wn.mainloop()
 def start_game(): 
     # this is what happens when you dont make classes :(
     global FONT, wn, width, height, player_defeat, enemy_list, enemy_count, enemy_max, enemy_width, enemy_length, enemy_outline, coin_collected, coin_list, coin_count, coin_width, coin_length, coin_outline, score, score_shown, start, time_elapsed, turt, gamestate
@@ -378,5 +380,25 @@ def start_game():
     wn.onkeypress(left, key="a")
     wn.onkeypress(down, key="s")
     wn.onkeypress(right, key="d")
-start_game()
-wn.exitonclick()
+
+def start_about():
+    global FONT, wn, width, height, gamestate
+    FONT = ("Arial", 18, "normal")
+    wn = Screen()
+    wn.clear()
+    wn.bgpic('dungeon_blank.gif')
+    wn.bgcolor('black')
+    wn.colormode(255)
+    wn.listen()
+    gamestate = "ABOUT"
+    # 960x810 (default)
+    width = wn.screensize()[0]
+    height = wn.screensize()[1]
+
+    # only one button here to go back to the main menu "Back"
+    btn = create_button(-80, -50, 130, 30, "Play")
+    btn = create_button(-80, -100, 130, 30, "About")
+    btn = create_button(-80, -150, 130, 30, "Quit")
+    btn.onclick(register_click)
+    update()
+start_menu()
