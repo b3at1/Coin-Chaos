@@ -2,6 +2,6 @@ Each coin will increases your score by 100 points.
 Each second you survive will grant you 10 additional points.
 As time goes on, more and more balls spawn, going faster and faster!
 See if you can beat our high scores!
-Sam:   3210
+Sam:   4169
 Belle:  3210
 Claire: 3210
