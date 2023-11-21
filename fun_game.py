@@ -11,7 +11,7 @@ def game_over():
     if player_defeat:
         wn.clear()
         wn = Screen()
-        wn.bgpic('dungeon.gif')
+        wn.bgpic('dungeon_blank.gif')
         wn.bgcolor('black')
         wn.colormode(255)
         wn.listen()
@@ -145,14 +145,13 @@ def check_collision_enemy(enemy_list: list):
     for enemy in enemy_list:
         x_enemy = enemy.xcor()
         y_enemy = enemy.ycor()
-        if abs(x_enemy - x_player) < 8 * enemy_width and abs(y_enemy - y_player) < 8 * enemy_length: # tolerance for collision, 8 seems to work NO IDEA WHY
+        if abs(x_enemy - x_player) < 12 * enemy_width and abs(y_enemy - y_player) < 12 * enemy_length: # tolerance for collision, 8 seems to work NO IDEA WHY
             # GAME OVER STATE HERE
             player_defeat = True # player has been defeated
             wait_time(1) # these waits reduce chance of race condition
             game_over()
             return
-            
-    wn.ontimer(lambda: check_collision_enemy(enemy_list), 16)
+    wn.ontimer(lambda: check_collision_enemy(enemy_list), 32)
 
 def spawn_enemy(enemy_count, enemy_max):
     global player_defeat
@@ -279,7 +278,7 @@ def start_menu():
     global FONT, wn, width, height, gamestate
     wn = Screen()
     wn.clear()
-    wn.bgpic('dungeon.gif')
+    wn.bgpic('dungeon_title.gif')
     wn.bgcolor('black')
     wn.colormode(255)
     wn.listen()
