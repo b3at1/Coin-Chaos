@@ -1,5 +1,6 @@
 # Title??
 from turtle import *
+from pathlib import Path
 import time
 import random
 
@@ -11,13 +12,13 @@ def game_over():
     if player_defeat:
         wn.clear()
         wn = Screen()
-        wn.bgpic('assets\dungeon_blank.gif')
+        wn.bgpic('dungeon_blank.gif')
         wn.bgcolor('black')
         wn.colormode(255)
         wn.listen()
-        wn.register_shape('assets\coin32.gif')
-        wn.register_shape('assets\\ball.gif')
-        wn.register_shape('assets\player.gif')
+        wn.register_shape('coin32.gif')
+        wn.register_shape('ball.gif')
+        wn.register_shape('player.gif')
         final_score = Turtle(visible=False)
         final_score.penup()
         final_score.pencolor('white')
@@ -166,7 +167,7 @@ def spawn_enemy(enemy_count, enemy_max):
         enemy = Turtle(visible=False)
         enemy.resizemode("user")
         enemy.shapesize(enemy_width, enemy_length, enemy_outline)
-        enemy.shape("assets\\ball.gif")
+        enemy.shape("ball.gif")
         enemy_list.append(enemy) # add enemy to enemy list
         enemy.speed('fastest')
         enemy.penup()
@@ -188,7 +189,7 @@ def spawn_coin(coin_max):
         coin = Turtle(visible=False)
         coin.resizemode("user")
         coin.shapesize(coin_width, coin_length, coin_outline) 
-        coin.shape("assets\coin32.gif")
+        coin.shape("coin32.gif")
         coin.color(255,200,150)
         coin_list.append(coin) # add coin to coin list
         coin.penup()
@@ -283,7 +284,7 @@ def start_menu():
     FONT = ("Arial", 18, "normal")
     wn = Screen()
     wn.clear()
-    wn.bgpic('assets\dungeon_title.gif')
+    wn.bgpic('dungeon_title.gif')
     wn.bgcolor('black')
     wn.colormode(255)
     wn.listen()
@@ -303,13 +304,13 @@ def start_game():
     FONT = ("Arial", 18, "normal")
     wn = Screen()
     wn.clear()
-    wn.bgpic('assets\dungeon.gif')
+    wn.bgpic('dungeon.gif')
     wn.bgcolor('black')
     wn.colormode(255)
     wn.listen()
-    wn.register_shape('assets\coin32.gif')
-    wn.register_shape('assets\\ball.gif')
-    wn.register_shape('assets\player.gif')
+    wn.register_shape('coin32.gif')
+    wn.register_shape('ball.gif')
+    wn.register_shape('player.gif')
 
     # 960x810 (default)
     width = wn.screensize()[0]
@@ -358,7 +359,7 @@ def start_game():
     turt.penup()
     turt.resizemode("user")
     turt.shapesize(coin_width, coin_length, coin_outline)
-    turt.shape("assets\player.gif") 
+    turt.shape("player.gif") 
 
     # initiate scoring
     calc_time(start)
@@ -390,7 +391,7 @@ def start_about():
     FONT_LG = ("Arial", 36, "normal")
     wn = Screen()
     wn.clear()
-    wn.bgpic('assets\dungeon_blank.gif')
+    wn.bgpic('dungeon_blank.gif')
     wn.bgcolor('black')
     wn.colormode(255)
     wn.listen()
@@ -404,19 +405,19 @@ def start_about():
     final_score.goto(-100, 250)
     final_score.write(f"Instructions\n", font=FONT_LG)
     try:
-        with open("assets/instructions.txt", 'r') as instructions:
+        with open("instructions.txt", 'r') as instructions:
             final_score.goto(-400, 125)
             final_score.write(f"{instructions.read()}", font=FONT)
     except FileNotFoundError:
-        print("Missing file: 'assets/instructions.txt'")
+        print("Missing file: 'instructions.txt'")
     final_score.goto(-100, -125)
     final_score.write(f"Rules\n", font=FONT_LG)
     try:
-        with open("assets/rules.txt", 'r') as instructions:
+        with open("rules.txt", 'r') as instructions:
             final_score.goto(-400, -275)
             final_score.write(f"{instructions.read()}", font=FONT)
     except FileNotFoundError:
-        print("Missing file: 'assets/rules.txt'")
+        print("Missing file: 'rules.txt'")
     # only one button here to go back to the main menu "Back"
     btn = create_button(-80, -350, 130, 30, "Back")
     btn.onclick(register_click)
