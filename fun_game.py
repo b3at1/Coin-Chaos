@@ -25,15 +25,14 @@ def game_over():
         final_score.write(f"GAME OVER!", font=FONT)
         final_score.goto(-100, 0)
         gamestate = "DEFEAT"
-        five_seconds = time.time()
         # had to make my own function, since time.sleep() interrupts gameloop
         wait_time(2)
         final_score.write(f"Score: {score:>10}", font=FONT)
         wait_time(1)
-        play_btn = create_button(-80, -50, 130, 30, "Play Again")
-        play_btn = create_button(-80, -100, 130, 30, "Menu")
-        play_btn = create_button(-80, -150, 130, 30, "Quit")
-        play_btn.onclick(register_click)
+        btn = create_button(-80, -50, 130, 30, "Play Again")
+        btn = create_button(-80, -100, 130, 30, "Menu")
+        btn = create_button(-80, -150, 130, 30, "Quit")
+        btn.onclick(register_click)
         update()
 
 def create_button(x: int, y: int, txt_width: int, txt_height: int, text: str) -> Screen:
@@ -67,10 +66,22 @@ def register_click(x: int, y: int):
         if x >= -90 and x <= 40 and y >= -50 and y <= -20: # play game is clicked
             start_game()
         elif x >= -90 and x <= 40 and y >= -100 and y <= -70: # menu is clicked
-            print("MENU") # placeholders
+            start_menu()
         elif x >= -90 and x <= 40 and y >= -150 and y <= -120: # quit is clicked
             wait_time(0.2)
             exit()
+        else:
+            pass
+    elif gamestate == "MENU":
+        if x >= -90 and x <= 40 and y >= -50 and y <= -20: # play game is clicked
+            start_game()
+        elif x >= -90 and x <= 40 and y >= -100 and y <= -70: # about is clicked
+           print("about") # placeholders
+        elif x >= -90 and x <= 40 and y >= -150 and y <= -120: # quit is clicked
+            wait_time(0.2)
+            exit()
+        else:
+            pass
     print(x, y)
     return (x, y)
 
@@ -276,7 +287,11 @@ def start_menu():
     # 960x810 (default)
     width = wn.screensize()[0]
     height = wn.screensize()[1]
-
+    btn = create_button(-80, -50, 130, 30, "Play")
+    btn = create_button(-80, -100, 130, 30, "About")
+    btn = create_button(-80, -150, 130, 30, "Quit")
+    btn.onclick(register_click)
+    update()
 def start_game(): 
     # this is what happens when you dont make classes :(
     global FONT, wn, width, height, player_defeat, enemy_list, enemy_count, enemy_max, enemy_width, enemy_length, enemy_outline, coin_collected, coin_list, coin_count, coin_width, coin_length, coin_outline, score, score_shown, start, time_elapsed, turt, gamestate
