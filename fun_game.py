@@ -11,13 +11,13 @@ def game_over():
     if player_defeat:
         wn.clear()
         wn = Screen()
-        wn.bgpic('dungeon_blank.gif')
+        wn.bgpic('assets\dungeon_blank.gif')
         wn.bgcolor('black')
         wn.colormode(255)
         wn.listen()
-        wn.register_shape('coin32.gif')
-        wn.register_shape('ball.gif')
-        wn.register_shape('player.gif')
+        wn.register_shape('assets\coin32.gif')
+        wn.register_shape('assets\\ball.gif')
+        wn.register_shape('assets\player.gif')
         final_score = Turtle(visible=False)
         final_score.penup()
         final_score.pencolor('white')
@@ -162,7 +162,7 @@ def spawn_enemy(enemy_count, enemy_max):
         enemy = Turtle(visible=False)
         enemy.resizemode("user")
         enemy.shapesize(enemy_width, enemy_length, enemy_outline)
-        enemy.shape("ball.gif")
+        enemy.shape("assets\\ball.gif")
         enemy_list.append(enemy) # add enemy to enemy list
         enemy.speed('fastest')
         enemy.penup()
@@ -184,7 +184,7 @@ def spawn_coin(coin_max):
         coin = Turtle(visible=False)
         coin.resizemode("user")
         coin.shapesize(coin_width, coin_length, coin_outline) 
-        coin.shape("coin32.gif")
+        coin.shape("assets\coin32.gif")
         coin.color(255,200,150)
         coin_list.append(coin) # add coin to coin list
         coin.penup()
@@ -279,7 +279,7 @@ def start_menu():
     FONT = ("Arial", 18, "normal")
     wn = Screen()
     wn.clear()
-    wn.bgpic('dungeon_title.gif')
+    wn.bgpic('assets\dungeon_title.gif')
     wn.bgcolor('black')
     wn.colormode(255)
     wn.listen()
@@ -299,13 +299,13 @@ def start_game():
     FONT = ("Arial", 18, "normal")
     wn = Screen()
     wn.clear()
-    wn.bgpic('dungeon.gif')
+    wn.bgpic('assets\dungeon.gif')
     wn.bgcolor('black')
     wn.colormode(255)
     wn.listen()
-    wn.register_shape('coin32.gif')
-    wn.register_shape('ball.gif')
-    wn.register_shape('player.gif')
+    wn.register_shape('assets\coin32.gif')
+    wn.register_shape('assets\\ball.gif')
+    wn.register_shape('assets\player.gif')
 
     # 960x810 (default)
     width = wn.screensize()[0]
@@ -340,7 +340,6 @@ def start_game():
     coin_width = 1.4
     coin_length = 1.4
     coin_outline = coin_width // 1
-
     score = 0
     score_shown = Turtle()
     score_shown.penup()
@@ -355,7 +354,7 @@ def start_game():
     turt.penup()
     turt.resizemode("user")
     turt.shapesize(coin_width, coin_length, coin_outline)
-    turt.shape("player.gif") 
+    turt.shape("assets\player.gif") 
 
     # initiate scoring
     calc_time(start)
@@ -386,7 +385,7 @@ def start_about():
     FONT = ("Arial", 18, "normal")
     wn = Screen()
     wn.clear()
-    wn.bgpic('dungeon_blank.gif')
+    wn.bgpic('assets\dungeon_blank.gif')
     wn.bgcolor('black')
     wn.colormode(255)
     wn.listen()
