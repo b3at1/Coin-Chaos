@@ -85,7 +85,6 @@ def register_click(x: int, y: int):
     elif gamestate == "ABOUT":
         if x >= -90 and x <= 40 and y >= -350 and y <= -20: # back (menu) is clicked
             start_menu()
-    print(x, y)
     return (x, y)
 
 ######################## TIME LOGIC ########################
@@ -349,7 +348,7 @@ def start_game():
     score_shown = Turtle()
     score_shown.penup()
     score_shown.hideturtle()
-    score_shown.goto(width - 120, height + 50)
+    score_shown.goto(width - 150, height + 50)
     score_shown.pencolor('white')
     start = time.time()
     time_elapsed = 0.0
