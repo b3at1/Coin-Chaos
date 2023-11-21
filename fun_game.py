@@ -69,7 +69,8 @@ def register_click(x: int, y: int):
         elif x >= -90 and x <= 40 and y >= -100 and y <= -70: # menu is clicked
             print("MENU") # placeholders
         elif x >= -90 and x <= 40 and y >= -150 and y <= -120: # quit is clicked
-            print("QUIT")
+            wait_time(0.2)
+            exit()
     print(x, y)
     return (x, y)
 
@@ -108,7 +109,7 @@ def checkbounds_enemy(enemy: Turtle):
     global time_elapsed
     if player_defeat:
         return
-    if enemy.xcor() >= width - 20 or enemy.ycor() >= height - 20 or enemy.xcor() <= -1 * width + 20 or enemy.ycor() <= -1 * height + 20:
+    if enemy.xcor() >= width + 40 or enemy.ycor() >= height + 70 or enemy.xcor() <= -1 * width - 40 or enemy.ycor() <= -1 * height - 70:
         angle_modifier = random.randint(0,15)
         enemy.setheading((120 + angle_modifier + enemy.heading()) % 360) # bounce off a wall
         enemy.forward(20) # "boost" enemy away from wall
@@ -133,7 +134,7 @@ def check_collision_enemy(enemy_list: list):
     for enemy in enemy_list:
         x_enemy = enemy.xcor()
         y_enemy = enemy.ycor()
-        if abs(x_enemy - x_player) < 12 * enemy_width and abs(y_enemy - y_player) < 12 * enemy_length: # tolerance for collision, 4 seems to work NO IDEA WHY
+        if abs(x_enemy - x_player) < 8 * enemy_width and abs(y_enemy - y_player) < 8 * enemy_length: # tolerance for collision, 8 seems to work NO IDEA WHY
             # GAME OVER STATE HERE
             player_defeat = True # player has been defeated
             wait_time(1) # these waits reduce chance of race condition
@@ -252,17 +253,29 @@ def checkbounds_player():
         return
     # by default, screen is 960x960.
     # coords go from (-480,-480) to (480, 480)
-    if turt.xcor() >= width - 20:
-        turt.setx(width - 20)
-    if turt.ycor() >= height - 20:
-        turt.sety(height - 20)
+    if turt.xcor() >= width + 60:
+        turt.setx(width + 60)
+    if turt.ycor() >= height + 80:
+        turt.sety(height + 80)
     
-    if turt.xcor() <= -1 * width + 20:
-        turt.setx( -1 * width + 20)    
-    if turt.ycor() <= -1 * height + 20:
-        turt.sety(-1 * height + 20)
+    if turt.xcor() <= -1 * width - 60:
+        turt.setx( -1 * width - 60)    
+    if turt.ycor() <= -1 * height - 80:
+        turt.sety(-1 * height - 80)
     wn.ontimer(checkbounds_player, 20)
 
+def start_menu():
+    global FONT, wn, width, height, gamestate
+    wn = Screen()
+    wn.clear()
+    wn.bgpic('dungeon.gif')
+    wn.bgcolor('black')
+    wn.colormode(255)
+    wn.listen()
+    gamestate = "MENU"
+    # 960x810 (default)
+    width = wn.screensize()[0]
+    height = wn.screensize()[1]
 
 def start_game(): 
     # this is what happens when you dont make classes :(
@@ -316,7 +329,7 @@ def start_game():
     score_shown = Turtle()
     score_shown.penup()
     score_shown.hideturtle()
-    score_shown.goto(width - 200, height - 50)
+    score_shown.goto(width - 120, height + 50)
     score_shown.pencolor('white')
     start = time.time()
     time_elapsed = 0.0
