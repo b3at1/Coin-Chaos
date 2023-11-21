@@ -1,0 +1,6 @@
+Coin Chaos is a game about collecting coins, and dodging energy balls.
+If you come into contact with a ball, you lose!
+The controls are simple: Use the mouse to left click on options in the menus.
+In the game: use the W, A, S, and D keys to move.
+W moves up, A moves left, S moves down, and D moves right.
+You can also hold the keys!

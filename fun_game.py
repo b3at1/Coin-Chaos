@@ -36,7 +36,7 @@ def game_over():
         update()
 
 def create_button(x: int, y: int, txt_width: int, txt_height: int, text: str) -> Screen:
-    # this method is used to create and return button turtles that can be pressed
+    '''used to create and return button turtles that can be pressed'''
     button_box = Turtle(visible=False)
     button_box.penup()
     button_box.goto(x, y)
@@ -59,9 +59,8 @@ def create_button(x: int, y: int, txt_width: int, txt_height: int, text: str) ->
     return button
 
 def register_click(x: int, y: int):
+    '''returns click coordinates, check if the button was pressed'''
     global gamestate
-    # returns click coordinates
-    # check if the button was pressed
     if gamestate == "DEFEAT":
         if x >= -90 and x <= 40 and y >= -50 and y <= -20: # play game is clicked
             start_game()
@@ -71,29 +70,34 @@ def register_click(x: int, y: int):
             wait_time(0.2)
             exit()
         else:
-            pass
+            pass # this satisfies having an if - elif - else
     elif gamestate == "MENU":
         if x >= -90 and x <= 40 and y >= -50 and y <= -20: # play game is clicked
             start_game()
         elif x >= -90 and x <= 40 and y >= -100 and y <= -70: # about is clicked
            start_about() # placeholders
         elif x >= -90 and x <= 40 and y >= -150 and y <= -120: # quit is clicked
-            wait_time(0.2)
+            wait_time(0.4)
             exit()
         else:
             pass
+    elif gamestate == "ABOUT":
+        if x >= -90 and x <= 40 and y >= -350 and y <= -20: # back (menu) is clicked
+            start_menu()
     print(x, y)
     return (x, y)
 
 ######################## TIME LOGIC ########################
 def calc_time(start: float):
+    '''calculate elapsed time'''
     global time_elapsed, player_defeat
     if player_defeat:
         return
     time_elapsed = time.time() - start 
     wn.ontimer(lambda: calc_time(start), 100)
 
-def wait_time(amnt: int):
+def wait_time(amnt: float):
+    '''wait in this function for a certain time amount (in seconds)'''
     # waits amnt seconds
     startT = time.time()
     i = amnt
@@ -125,8 +129,8 @@ def checkbounds_enemy(enemy: Turtle):
         enemy.setheading((120 + angle_modifier + enemy.heading()) % 360) # bounce off a wall
         enemy.forward(20) # "boost" enemy away from wall
 
-# check collision can take either a list or a single turtle, and returns whether a collision occurred
 def check_collision_onSpawn(enemy: Turtle):
+    '''check collision can take either a list or a single turtle, and returns whether a collision occurred'''
     global time_elapsed
     if player_defeat:
         return
@@ -383,6 +387,7 @@ def start_game():
 def start_about():
     global FONT, wn, width, height, gamestate
     FONT = ("Arial", 18, "normal")
+    FONT_LG = ("Arial", 36, "normal")
     wn = Screen()
     wn.clear()
     wn.bgpic('assets\dungeon_blank.gif')
@@ -393,11 +398,27 @@ def start_about():
     # 960x810 (default)
     width = wn.screensize()[0]
     height = wn.screensize()[1]
-
+    final_score = Turtle(visible=False)
+    final_score.penup()
+    final_score.pencolor('white')
+    final_score.goto(-100, 250)
+    final_score.write(f"Instructions\n", font=FONT_LG)
+    try:
+        with open("assets/instructions.txt", 'r') as instructions:
+            final_score.goto(-400, 125)
+            final_score.write(f"{instructions.read()}", font=FONT)
+    except FileNotFoundError:
+        print("Missing file: 'assets/instructions.txt'")
+    final_score.goto(-100, -125)
+    final_score.write(f"Rules\n", font=FONT_LG)
+    try:
+        with open("assets/rules.txt", 'r') as instructions:
+            final_score.goto(-400, -275)
+            final_score.write(f"{instructions.read()}", font=FONT)
+    except FileNotFoundError:
+        print("Missing file: 'assets/rules.txt'")
     # only one button here to go back to the main menu "Back"
-    btn = create_button(-80, -50, 130, 30, "Play")
-    btn = create_button(-80, -100, 130, 30, "About")
-    btn = create_button(-80, -150, 130, 30, "Quit")
+    btn = create_button(-80, -350, 130, 30, "Back")
     btn.onclick(register_click)
     update()
 start_menu()
