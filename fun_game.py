@@ -12,6 +12,8 @@ def game_over():
     if player_defeat:
         wn.clear()
         wn = Screen()
+        # hardcoded to fix certain scaling issues
+        wn.setup(960,810)
         wn.bgpic('dungeon_blank.gif')
         wn.bgcolor('black')
         wn.colormode(255)
@@ -283,6 +285,8 @@ def start_menu():
     FONT = ("Arial", 18, "normal")
     wn = Screen()
     wn.clear()
+    # hardcoded to fix certain scaling issues
+    wn.setup(960,810)
     wn.bgpic('dungeon_title.gif')
     wn.bgcolor('black')
     wn.colormode(255)
@@ -303,6 +307,8 @@ def start_game():
     FONT = ("Arial", 18, "normal")
     wn = Screen()
     wn.clear()
+    # hardcoded to fix certain scaling issues
+    wn.setup(960,810)
     wn.bgpic('dungeon.gif')
     wn.bgcolor('black')
     wn.colormode(255)
@@ -390,6 +396,8 @@ def start_about():
     FONT_LG = ("Arial", 36, "normal")
     wn = Screen()
     wn.clear()
+    # hardcoded to fix certain scaling issues
+    wn.setup(960,810)
     wn.bgpic('dungeon_blank.gif')
     wn.bgcolor('black')
     wn.colormode(255)
