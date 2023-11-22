@@ -107,9 +107,6 @@ def wait_time(amnt: float):
         i = time.time()
 
 ######################## ENEMY LOGIC ########################
-# TODO: fix enemy bounce angle?
-
-
 def move_enemy(enemy: Turtle):
     global time_elapsed, player_defeat
     if player_defeat:
