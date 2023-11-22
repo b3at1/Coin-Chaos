@@ -126,10 +126,12 @@ def checkbounds_enemy(enemy: Turtle):
     global time_elapsed
     if player_defeat:
         return
-    if enemy.xcor() >= width + 40 or enemy.ycor() >= height + 70 or enemy.xcor() <= -1 * width - 40 or enemy.ycor() <= -1 * height - 70:
-        angle_modifier = random.randint(0,15)
-        enemy.setheading((120 + angle_modifier + enemy.heading()) % 360) # bounce off a wall
+    if enemy.xcor() >= width + 40 or  enemy.xcor() <= -1 * width - 40:
+        enemy.setheading(180 - enemy.heading())
         enemy.forward(20) # "boost" enemy away from wall
+    elif  enemy.ycor() >= height + 70 or enemy.ycor() <= -1 * height - 70:
+        enemy.setheading(-enemy.heading())
+        enemy.forward(20)
 
 def check_collision_onSpawn(enemy: Turtle):
     '''check collision can take either a list or a single turtle, and returns whether a collision occurred'''
