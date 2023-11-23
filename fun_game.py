@@ -85,7 +85,7 @@ def register_click(x: int, y: int):
         else:
             pass
     elif gamestate == "ABOUT":
-        if x >= -90 and x <= 40 and y >= -350 and y <= -20: # back (menu) is clicked
+        if x >= -90 and x <= 40 and y >= -350 and y <= -320: # back (menu) is clicked
             start_menu()
     return (x, y)
 
