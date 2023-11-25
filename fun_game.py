@@ -15,6 +15,7 @@ import random
    
 ######################## GAME STATE LOGIC ########################
 def game_over():
+    '''triggers events when player reaches gameover state.'''
     global player_defeat, score, wn, gamestate
     # the wait_times() are necessary otherwise a race condition will occur
     if player_defeat:
@@ -116,6 +117,7 @@ def wait_time(amnt: float):
 
 ######################## ENEMY LOGIC ########################
 def move_enemy(enemy: Turtle):
+    '''moves enemy energy balls'''
     global time_elapsed, player_defeat
     if player_defeat:
         return
@@ -128,6 +130,7 @@ def move_enemy(enemy: Turtle):
     wn.ontimer(lambda: move_enemy(enemy), 16) # kinda breaks code on exit but its fine.
 
 def checkbounds_enemy(enemy: Turtle):
+    '''checks if enemies have collided with the edges of the screen, and rebounds them'''
     global time_elapsed
     if player_defeat:
         return
@@ -152,6 +155,7 @@ def check_collision_onSpawn(enemy: Turtle):
     return False
 
 def check_collision_enemy(enemy_list: list):
+    '''checks if the enemy collides with the player, triggers game_over if that occurs'''
     global player_defeat
     x_player = turt.xcor()
     y_player = turt.ycor()
@@ -167,6 +171,7 @@ def check_collision_enemy(enemy_list: list):
     wn.ontimer(lambda: check_collision_enemy(enemy_list), 32)
 
 def spawn_enemy(enemy_count, enemy_max):
+    '''spawns enemies under a time condition if there are not yet enemy_max enemies'''
     global player_defeat
     if player_defeat:
         return
@@ -188,6 +193,7 @@ def spawn_enemy(enemy_count, enemy_max):
 
 ######################## COIN LOGIC ########################
 def spawn_coin(coin_max):
+    '''spawns coins under a time condition if there are not yet coin_max coins'''
     global coin_count, player_defeat
     if player_defeat:
         return
@@ -207,6 +213,7 @@ def spawn_coin(coin_max):
     wn.ontimer(lambda: spawn_coin(coin_max), 1000)
 
 def check_collision_coin(coin_list: list):
+    '''checks if the coin collides with the player, iterates coin_count if that occurs'''
     global coin_collected, coin_count, player_defeat
     if player_defeat: 
         return
@@ -227,6 +234,7 @@ def check_collision_coin(coin_list: list):
 
 ######################## SCORING LOGIC ########################
 def calc_score(score_shown: Turtle):
+    '''calculates player score from time survived and coins collected'''
     global time_elapsed, score, player_defeat
     if player_defeat:
         return
@@ -236,6 +244,7 @@ def calc_score(score_shown: Turtle):
     wn.ontimer(lambda: calc_score(score_shown), 100)
 
 def draw_score(score_shown: Turtle):
+    '''draws the score to the screen after game_over'''
     global score
     score_shown.clear()
     score_shown.write(f"Score: {score:>10}", font=FONT) # left pad it to look nicer
@@ -243,6 +252,7 @@ def draw_score(score_shown: Turtle):
 ######################## PLAYER LOGIC ########################
 
 def up():
+    '''move player up'''
     global time_elapsed
     if player_defeat:
         return
@@ -250,18 +260,21 @@ def up():
     turt.forward(20)
 
 def down():
+    '''move player down'''
     global time_elapsed
     if player_defeat:
         return 
     turt.seth(270) # set turtle direction to south
     turt.forward(20)
 def right():
+    '''move player right'''
     global time_elapsed
     if player_defeat:
         return
     turt.seth(0) # set turtle direction to east
     turt.forward(20)
 def left():
+    '''move player left'''
     global time_elapsed
     if player_defeat:
         return
@@ -269,6 +282,7 @@ def left():
     turt.forward(20)
 
 def checkbounds_player():
+    '''checks if player hits the edge of the screen, rebounds them'''
     global time_elapsed
     if player_defeat:
         return
@@ -286,6 +300,7 @@ def checkbounds_player():
     wn.ontimer(checkbounds_player, 20)
 
 def start_menu():
+    '''initiates the menu screen'''
     global FONT, wn, width, height, gamestate
     FONT = ("Arial", 18, "normal")
     wn = Screen()
@@ -306,7 +321,8 @@ def start_menu():
     btn.onclick(register_click)
     update()
     wn.mainloop()
-def start_game(): 
+def start_game():
+    '''initiates the game screen'''
     # this is what happens when you dont make classes :(
     global FONT, wn, width, height, player_defeat, enemy_list, enemy_count, enemy_max, enemy_width, enemy_length, enemy_outline, coin_collected, coin_list, coin_count, coin_width, coin_length, coin_outline, score, score_shown, start, time_elapsed, turt, gamestate
     FONT = ("Arial", 18, "normal")
@@ -396,6 +412,7 @@ def start_game():
     wn.onkeypress(right, key="d")
 
 def start_about():
+    '''initiates the about screen'''
     global FONT, wn, width, height, gamestate
     FONT = ("Arial", 18, "normal")
     FONT_LG = ("Arial", 36, "normal")
