@@ -12,9 +12,9 @@ Each coin will increases your score by 100 points.
 Each second you survive will grant you 10 additional points.
 As time goes on, more and more balls spawn, going faster and faster!
 See if you can beat our high scores!
-Sam:   4169
-Belle:  3828
-Claire: 3514
+<br>Sam:   4169
+<br>Belle:  3828
+<br>Claire: 3514
 
 ## Running the program:
 You can execute the program using the command 'python fun_game.py'
