@@ -142,7 +142,7 @@ def checkbounds_enemy(enemy: Turtle):
         enemy.forward(20)
 
 def check_collision_onSpawn(enemy: Turtle):
-    '''check collision can take either a list or a single turtle, and returns whether a collision occurred'''
+    '''checks for enemy collision on spawn, returns whether a collision occured'''
     global time_elapsed
     if player_defeat:
         return
