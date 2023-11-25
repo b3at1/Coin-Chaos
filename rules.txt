@@ -3,5 +3,5 @@ Each second you survive will grant you 10 additional points.
 As time goes on, more and more balls spawn, going faster and faster!
 See if you can beat our high scores!
 Sam:   4169
-Belle:  3210
-Claire: 3210
+Belle:  3828
+Claire: 3514

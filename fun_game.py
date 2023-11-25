@@ -1,10 +1,18 @@
-# Title??
+# By submitting this assignment, I agree to the following:
+# "Aggies do not lie, cheat, or steal, or tolerate those who do."
+# "I have not given or received any unauthorized aid on this assignment."
+#
+# Names: Claire Wu
+# Annabelle Erdberg
+# Sam Bederman
+# Section: 518
+# Assignment: LAB 13.1
+# Date: 25 November 2023
 from turtle import *
 from pathlib import Path
 import time
 import random
-
-    
+   
 ######################## GAME STATE LOGIC ########################
 def game_over():
     global player_defeat, score, wn, gamestate
@@ -219,7 +227,6 @@ def check_collision_coin(coin_list: list):
     wn.ontimer(lambda: check_collision_coin(coin_list), 16)
 
 ######################## SCORING LOGIC ########################
-
 def calc_score(score_shown: Turtle):
     global time_elapsed, score, player_defeat
     if player_defeat:
