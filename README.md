@@ -7,7 +7,7 @@ The controls are simple: Use the mouse to left click on options in the menus.
 In the game: use the W, A, S, and D keys to move.
 W moves up, A moves left, S moves down, and D moves right.
 You can also hold the keys!
-![](https://github.com/b3at1/Coin-Chaos/main/player.gif)
+![](https://github.com/b3at1/Coin-Chaos/blob/main/player.gif)
 Each coin will increases your score by 100 points.
 Each second you survive will grant you 10 additional points.
 As time goes on, more and more balls spawn, going faster and faster!
