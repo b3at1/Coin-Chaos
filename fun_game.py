@@ -9,7 +9,6 @@
 # Assignment: LAB 13.1
 # Date: 25 November 2023
 from turtle import *
-from pathlib import Path
 import time
 import random
    
