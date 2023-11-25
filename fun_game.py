@@ -159,7 +159,7 @@ def check_collision_enemy(enemy_list: list):
         x_enemy = enemy.xcor()
         y_enemy = enemy.ycor()
         if abs(x_enemy - x_player) < 12 * enemy_width and abs(y_enemy - y_player) < 12 * enemy_length: # tolerance for collision, 8 seems to work NO IDEA WHY
-            # GAME OVER STATE HERE
+            # This means a game over state is triggered
             player_defeat = True # player has been defeated
             wait_time(1) # these waits reduce chance of race condition
             game_over()
@@ -170,7 +170,7 @@ def spawn_enemy(enemy_count, enemy_max):
     global player_defeat
     if player_defeat:
         return
-    if enemy_count < enemy_max:
+    if enemy_count < enemy_max: # check that there are enemies left to spawn
         enemy_count += 1
         enemy = Turtle(visible=False)
         enemy.resizemode("user")
@@ -185,7 +185,6 @@ def spawn_enemy(enemy_count, enemy_max):
             enemy.goto(random.randint(-1 * width + 20, width - 20), random.randint(-1 * height + 20, height - 20))
         move_enemy(enemy)
     wn.ontimer(lambda: spawn_enemy(enemy_count, enemy_max), 5000)
-    # use current time to speed up the spawning of enemy?
 
 ######################## COIN LOGIC ########################
 def spawn_coin(coin_max):
@@ -209,7 +208,7 @@ def spawn_coin(coin_max):
 
 def check_collision_coin(coin_list: list):
     global coin_collected, coin_count, player_defeat
-    if player_defeat:
+    if player_defeat: 
         return
     x_player = turt.xcor()
     y_player = turt.ycor()
