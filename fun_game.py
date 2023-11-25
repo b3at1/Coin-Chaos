@@ -253,7 +253,7 @@ def draw_score(score_shown: Turtle):
 
 def up():
     '''move player up'''
-    global time_elapsed
+    global player_defeat
     if player_defeat:
         return
     turt.seth(90) # set turtle direction to north
@@ -261,21 +261,21 @@ def up():
 
 def down():
     '''move player down'''
-    global time_elapsed
+    global player_defeat
     if player_defeat:
         return 
     turt.seth(270) # set turtle direction to south
     turt.forward(20)
 def right():
     '''move player right'''
-    global time_elapsed
+    global player_defeat
     if player_defeat:
         return
     turt.seth(0) # set turtle direction to east
     turt.forward(20)
 def left():
     '''move player left'''
-    global time_elapsed
+    global player_defeat
     if player_defeat:
         return
     turt.seth(180) # set turtle direction to west
